@@ -20,7 +20,6 @@
         clearWarnings()
         value = val;
         if(type !== "numeric") return true;
-        if(value == "") $errored[id] = true;
         if(range && range.length == 2) {
             if(value < range[0]) {
                 warning = `lower than expected (min == ${range[0]})`
@@ -67,6 +66,9 @@
     {:else if type === "text"}
         <label for={id}>{label ?? "<VAR>"}</label>
         <input type="text" id={id} bind:value={$spnForm[id]} on:change={(e) => test(e.target.value)}>
+    {:else if type === "token"}
+        <label for={id}>{label ?? "<VAR>"}</label>
+        <input type="password" id={id} bind:value={$spnForm[id]} on:change={(e) => test(e.target.value)}>
     {/if}
 </div>
 

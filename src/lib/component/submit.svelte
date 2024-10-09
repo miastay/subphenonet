@@ -5,10 +5,11 @@
 
     function submit() {
         let error = false;
+        console.log($spnForm)
         $errored = {...$spnForm}
         for(let item of Object.keys($spnForm)) {
             $errored[item] = false;
-            if($spnForm[item] == null || $spnForm[item] == '') {
+            if($spnForm[item] === null || $spnForm[item] === '') {
                 $errored[item] = true;
                 error = true;
             }
@@ -44,7 +45,7 @@
 </script>
 
 <div class="submit">
-    <Field id="token" label="API key" type="text"/>
+    <Field id="token" label="API key" type="token"/>
     <button on:click={() => submit()}>Submit</button>
 </div>
 
