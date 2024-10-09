@@ -10,12 +10,39 @@
         gapi.load('client', initializeGapiClient);
     }
 
+    async function n() {
+        gapi.client.sheets.spreadsheets.values.append({
+            spreadsheetId: '1ARawxm4cXoQbshGQGWuBUPBFHja1TryV_rypn504y8I',
+            range: 'Sheet1!A1',
+            valueInputOption: "RAW",
+            resource: { values: [
+                [ "abc", "def", "ghi" ]
+            ]},
+        }).then((response) => {
+            const result = response.result;
+            console.log(`${result.updates.updatedCells} cells appended.`);
+            if (callback) callback(response);
+        });
+
+        let response = await gapi.client.sheets.spreadsheets.values.get({
+            spreadsheetId: '1ARawxm4cXoQbshGQGWuBUPBFHja1TryV_rypn504y8I',
+            range: 'Sheet1!A1:A10',
+        });
+        console.log(response)
+        return response;
+    }
+
     async function initializeGapiClient() {
         console.log(key)
         await gapi.client.init({
           apiKey: key,
           discoveryDocs: [DISCOVERY_DOC],
         });
+
+        // await gapi.client.sheets.spreadsheets.values.get({
+        //     spreadsheetId: '1ARawxm4cXoQbshGQGWuBUPBFHja1TryV_rypn504y8I',
+        //     range: 'Class Data!A2:E',
+        // });
         console.log("init?")
     }
 
@@ -26,10 +53,6 @@
 </svelte:head>
 <div class="form">
 
-    <input type="text" id="api_key" bind:value={key}/>
-    <label for="api_key">API key</label>
-    <button on:click={() => fetchSheet()}>fetch</button>
-    
     <div id="pelod" class="category">
         <h3>PELOD values</h3>
         <Field id="pelodwbc" label="White blood cell count" type="numeric"/>
@@ -37,6 +60,7 @@
         <Field id="pelodpt" label="Prothrombin time" type="numeric" />
         <Field id="pelodhr" label="Systolic heart rate" type="numeric" />
         <Field id="pelodlact" label="Lactate" type="numeric" />
+        <Field id="bicarb" label="Bicarbonate" type="numeric" />
     </div>
 
     <div id="prism" class="category">
@@ -44,14 +68,13 @@
         <Field id="prismpao2lo" label="PAO2" type="numeric" />
         <Field id="prismbunhi" label="Blood urea nitrogen" type="numeric" />
         <Field id="prismph" label="Blood pH" type="numeric" />
-        <Field id="prismtemphi" label="Temperature" type="numeric" />
+        <Field id="prismtemphi" label="Temperature" type="numeric" range={[20, 35]}/>
         <Field id="prismgluc" label="Blood glucose" type="numeric" />
     </div>
 
     <div id="prism" class="category">
         <h3>Demographic</h3>
         <Field id="wt" label="Weight" type="numeric" />
-        <Field id="bicarb" label="Bicarbonate" type="numeric" />
         <Field id="intub" label="Intubated?" type="binary" />
         <Field id="prisminpt" label="Admitted from inpatient unit?" type="binary" />
         <Field id="prismprevadm" label="Previous ICU admission?" type="binary" />
