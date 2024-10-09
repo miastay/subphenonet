@@ -1,5 +1,6 @@
 import adapter from '@sveltejs/adapter-static';
 import { vitePreprocess } from '@sveltejs/vite-plugin-svelte';
+import { sveltePreprocess } from 'svelte-preprocess';
 
 const dev = "production" === "development";
 
@@ -12,12 +13,13 @@ const config = {
         }),
         paths: {
             // change below to your repo name
-			base: process.env.NODE_ENV === 'production' ? '/subphenonet' : ''
+			base: dev ? "" : "/subphenonet"
         },
         // hydrate the <div id="svelte"> element in src/app.html
         //target: "#svelte"
     },
-	preprocess: [vitePreprocess()]
+	preprocess: sveltePreprocess({ })
+	//preprocess: [vitePreprocess()]
 };
 
 export default config;
