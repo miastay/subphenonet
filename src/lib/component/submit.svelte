@@ -1,6 +1,5 @@
 <script>
-    import { spnForm, errored } from "../../store";
-    import { GradientButton } from "flowbite-svelte";
+    import { spnForm, errored, modelType } from "../../store";
     import Field from "./field.svelte";
 
     function submit() {
@@ -31,6 +30,7 @@
                             'uuid': "INCREMENT",
                             'time': `=EPOCHTODATE(${Date.now()}, 2)`,
                             'token': key,
+                            'type': $modelType,
                             ...$spnForm
                         }
                     ]
