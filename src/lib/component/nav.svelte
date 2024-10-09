@@ -6,7 +6,7 @@
 <style lang="scss">
     .nav {
         display: flex;
-        height: 60px;
+        height: 80px;
         flex-direction: row;
         justify-content: space-between;
         align-items: center;
@@ -16,7 +16,10 @@
             font-size: xx-large;
         }
         h4 {
-            font-size: larger;
+            font-size: large;
+        }
+        a {
+            text-decoration: underline;
         }
     }
 </style>

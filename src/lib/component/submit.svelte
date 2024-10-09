@@ -1,20 +1,21 @@
 <script>
-    import { spnForm } from "../../store";
+    import { spnForm, errored } from "../../store";
+    import { GradientButton } from "flowbite-svelte";
+    import Field from "./field.svelte";
 
-    let key = "";
-
-    let submit = () => {
-        console.log($spnForm)
-        document.querySelectorAll(".err").forEach((e) => e.style.display = "none");
-        setTimeout(() => {}, 500);
-        let errored = false;
+    function submit() {
+        let error = false;
+        $errored = {...$spnForm}
         for(let item of Object.keys($spnForm)) {
-            if($spnForm[item] == null) {
-                document.getElementById(item + "_err").style.display = "block";
-                errored = true;
+            $errored[item] = false;
+            if($spnForm[item] == null || $spnForm[item] == '') {
+                $errored[item] = true;
+                error = true;
             }
         }
+        console.log($errored)
         if(!errored) {
+            let key = $spnForm['token'];
             console.log(key)
             fetch('https://sheetdb.io/api/v1/drdre24m4zs0o', {
                 method: 'POST',
@@ -43,11 +44,8 @@
 </script>
 
 <div class="submit">
-    <div>
-        <input type="text" id="api_key" bind:value={key}/>
-        <label for="api_key">API key</label>
-    </div>
-    <button on:click={() => submit()}>Submit Form</button>
+    <Field id="token" label="API key" type="text"/>
+    <button on:click={() => submit()}>Submit</button>
 </div>
 
 <style lang="scss">
@@ -56,4 +54,15 @@
         flex-direction: column;
         gap: 0.5rem;
     }
+    input {
+        border: solid 1px black;
+    }
+
+    button {
+        background: linear-gradient(266deg, rgba(29,12,245,1) -100%, rgba(177,55,255,1) 200%);
+        padding: 0.5rem;
+        color: white;
+        border-radius: 3px;
+    }
+
 </style>

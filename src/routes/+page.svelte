@@ -1,6 +1,6 @@
 <script>
     import Form from "../lib/component/form.svelte";
-import Nav from "../lib/component/nav.svelte";
+    import Nav from "../lib/component/nav.svelte";
 </script>
 
 <main>
