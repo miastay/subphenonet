@@ -1,3 +1,1 @@
-<style>@import "tailwindcss/base";
-    @import "tailwindcss/components";
-    @import "tailwindcss/utilities";</style><slot></slot>
+<style>@import "../app.css";</style><slot></slot>
