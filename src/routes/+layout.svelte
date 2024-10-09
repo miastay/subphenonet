@@ -1,1 +1,3 @@
-<script>import "../app.css";</script><slot></slot>
+<style>@import "tailwindcss/base";
+    @import "tailwindcss/components";
+    @import "tailwindcss/utilities";</style><slot></slot>
