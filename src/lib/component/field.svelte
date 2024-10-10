@@ -65,13 +65,13 @@
         <label for={id + '_false'}>FALSE</label>
     {:else if type === "numeric"}
         <label for={id}>{label ?? "<VAR>"}</label>
-        <input type="number" id={id} bind:value={$spnForm[id]} on:change={(e) => test(e.target.value)} placeholder={units}>
+        <input type="number" id={id} bind:value={$spnForm[id]} on:change={(e) => test(e.target.value)} placeholder={units} class={(($errored[id] == true) ? 'errored' : '') + ((warning !== null) ? 'warned' : '')}>
     {:else if type === "text"}
         <label for={id}>{label ?? "<VAR>"}</label>
-        <input type="text" id={id} bind:value={$spnForm[id]} on:change={(e) => test(e.target.value)}>
+        <input type="text" id={id} bind:value={$spnForm[id]} on:change={(e) => test(e.target.value)} class={(($errored[id] == true) ? 'errored' : '') + ((warning !== null) ? 'warned' : '')}>
     {:else if type === "token"}
         <label for={id}>{label ?? "<VAR>"}</label>
-        <input type="password" id={id} bind:value={$spnForm[id]} on:change={(e) => test(e.target.value)}>
+        <input type="password" id={id} bind:value={$spnForm[id]} on:change={(e) => test(e.target.value)} class={(($errored[id] == true) ? 'errored' : '') + ((warning !== null) ? 'warned' : '')}>
         <button class="ml-2" on:click={() => {let elem = document.querySelector(`#${id}`); eye = (elem.type === "password"); eye ? elem.type = "text" : elem.type = "password"}}>
             {#if eye}
                 <EyeSlashOutline class="w-6 h-6 text-black"/>
@@ -81,7 +81,7 @@
         </button>
     {:else if type === "user"}
         <label for={id}>{label ?? "<VAR>"}</label>
-        <input type="username" id={id} bind:value={$spnForm[id]} on:change={(e) => test(e.target.value)}>
+        <input type="username" id={id} bind:value={$spnForm[id]} on:change={(e) => test(e.target.value)} class={(($errored[id] == true) ? 'errored' : '') + ((warning !== null) ? 'warned' : '')}>
     {/if}
 </div>
 
@@ -121,6 +121,12 @@
     input {
         border: solid 1px black;
         padding: 0.25rem;
+        &.errored {
+            border-color: #cf004f;
+        }
+        &.warned {
+            border-color: #cb9200;
+        }
     }
     .field {
         display: flex;

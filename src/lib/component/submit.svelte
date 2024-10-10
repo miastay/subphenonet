@@ -101,7 +101,7 @@
 <div class="submit">
     <Field id="site" label="Site key" type="user"/>
     <Field id="api" label="API key" type="token"/>
-    <button on:click={() => submit()}>Submit</button>
+    <button class="mt-2" on:click={() => submit()}>Submit</button>
 </div>
 
 <style lang="scss">
@@ -115,10 +115,16 @@
     }
 
     button {
-        background: linear-gradient(266deg, rgba(29,12,245,1) -100%, rgba(177,55,255,1) 200%);
+        background: linear-gradient(266deg, #1d0cf5 -100%, rgba(177,55,255,1) 200%);
         padding: 0.5rem;
         color: white;
         border-radius: 3px;
+        &:active {
+            outline: solid 4px #1d0cf5;
+            outline-offset: 2px;
+            transform: scale(0.97)
+        }
+        transition: transform 0.25s ease;
     }
 
 </style>
