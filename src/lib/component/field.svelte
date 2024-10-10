@@ -2,12 +2,15 @@
     import { onMount } from 'svelte';
     import { spnForm, errored } from '../../store.js';
     import { Badge, Indicator, Popover } from 'flowbite-svelte';
+    import { EyeOutline, EyeSlashOutline } from 'flowbite-svelte-icons';
 
     export let id;
     export let label;
     export let type = "numeric";
     export let range;
     export let units = '';
+
+    let eye = false;
 
     onMount(() => {
         $spnForm[id] = null;
@@ -69,6 +72,16 @@
     {:else if type === "token"}
         <label for={id}>{label ?? "<VAR>"}</label>
         <input type="password" id={id} bind:value={$spnForm[id]} on:change={(e) => test(e.target.value)}>
+        <button class="ml-2" on:click={() => {let elem = document.querySelector(`#${id}`); eye = (elem.type === "password"); eye ? elem.type = "text" : elem.type = "password"}}>
+            {#if eye}
+                <EyeSlashOutline class="w-6 h-6 text-black"/>
+            {:else}
+                <EyeOutline class="w-6 h-6 text-black"/>
+            {/if}
+        </button>
+    {:else if type === "user"}
+        <label for={id}>{label ?? "<VAR>"}</label>
+        <input type="username" id={id} bind:value={$spnForm[id]} on:change={(e) => test(e.target.value)}>
     {/if}
 </div>
 

@@ -1,4 +1,5 @@
 <script>
+    import { onMount } from "svelte";
     import { spnForm, errored, modelType } from "../../store";
     import Field from "./field.svelte";
 
@@ -14,38 +15,92 @@
             }
         }
         console.log($errored)
-        if(!errored) {
-            let key = $spnForm['token'];
-            console.log(key)
-            fetch('https://sheetdb.io/api/v1/drdre24m4zs0o', {
-                method: 'POST',
-                headers: {
-                    'Accept': 'application/json',
-                    'Content-Type': 'application/json',
-                    'Authorization': 'Bearer ' + key 
-                },
-                body: JSON.stringify({
-                    data: [
-                        {
-                            'uuid': "INCREMENT",
-                            'time': `=EPOCHTODATE(${Date.now()}, 2)`,
-                            'token': key,
-                            'type': $modelType,
-                            ...$spnForm
-                        }
-                    ]
-                })
-            })
-            .then((response) => response.json())
-            .then((data) => console.log(data));
-
-            return;
+        if(!error) {
+            console.log("writing..")
+            fire()
         }
     }
+
+    async function gsheet() {
+        let key = $spnForm['token'];
+        console.log(key)
+        fetch('https://sheetdb.io/api/v1/drdre24m4zs0o', {
+            method: 'POST',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+                'Authorization': 'Bearer ' + key 
+            },
+            body: JSON.stringify({
+                data: [
+                    {
+                        'uuid': "INCREMENT",
+                        'time': `=EPOCHTODATE(${Date.now()}, 2)`,
+                        'token': key,
+                        'type': $modelType,
+                        ...$spnForm
+                    }
+                ]
+            })
+        })
+        .then((response) => response.json())
+        .then((data) => console.log(data));
+
+        return;
+    }
+
+
+    import { initializeApp } from 'firebase/app';
+    import { getFirestore, collection, serverTimestamp, getDoc, doc, addDoc } from 'firebase/firestore/lite';
+
+    async function fire() {
+   
+        // Follow this pattern to import other Firebase services
+        // import { } from 'firebase/<service>';
+
+        let key = $spnForm['api'].trim()
+        let site = $spnForm['site'].trim()
+
+        // TODO: Replace the following with your app's Firebase project configuration
+        const firebaseConfig = {
+            apiKey: key,
+            authDomain: "subphenonet-6e099.firebaseapp.com",
+            projectId: "subphenonet-6e099",
+            storageBucket: "subphenonet-6e099.appspot.com",
+            messagingSenderId: "883130851384",
+            appId: "1:883130851384:web:57203fb97863654af306cd",
+            measurementId: "G-7ZQ928FG6V"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        const siteRef = doc(db, 'sites', site);
+
+        const docSnap = await getDoc(siteRef);
+        if (!docSnap.exists()) {
+            console.error("Could not find site.")
+            return;
+        }
+
+        const nestedCollectionRef = collection(siteRef, 'samples');
+
+        addDoc(nestedCollectionRef, {
+            'data': {...$spnForm},
+            'time': serverTimestamp()
+        }).then((docRef) => {
+            console.log("Document written with ID: ", docRef.id);
+        }).catch((error) => {
+            console.error("Error adding document: ", error);
+        });
+
+    }
+
 </script>
 
 <div class="submit">
-    <Field id="token" label="API key" type="token"/>
+    <Field id="site" label="Site key" type="user"/>
+    <Field id="api" label="API key" type="token"/>
     <button on:click={() => submit()}>Submit</button>
 </div>
 

@@ -13,7 +13,7 @@ const config = {
         }),
         paths: {
             // change below to your repo name
-			base: "/subphenonet"
+			base: dev ? "" : "/subphenonet"
         },
         // hydrate the <div id="svelte"> element in src/app.html
         //target: "#svelte"
