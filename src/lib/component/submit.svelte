@@ -129,7 +129,7 @@
 <div class="submit">
     <Field id="site" label="Site key" type="user"/>
     <Field id="api" label="API key" type="token"/>
-    <button on:click={() => {$lastPrediction = predict()}}>Predict</button>
+    <!-- <button on:click={() => {$lastPrediction = predict()}}>Predict</button> -->
     <button class="mt-2" on:click={() => submit()}>Submit</button>
 </div>
 
