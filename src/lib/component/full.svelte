@@ -1,39 +1,46 @@
 <script>
-    import Field from "./field.svelte";
+    import { lastPrediction } from "../../store";
+import Field from "./field.svelte";
+    import Result from "./result.svelte";
     import Submit from "./submit.svelte";
 </script>
 
 <div id="pelod" class="category">
     <h3>PELOD values</h3>
-    <Field id="pelodwbc" label="White blood cell count" type="numeric"/>
-    <Field id="pelodplate" label="Platelet count" type="numeric" />
-    <Field id="pelodpt" label="Prothrombin time" type="numeric" />
-    <Field id="pelodhr" label="Heart rate" type="numeric" range={[56, 135]} units={'bpm'}/>
-    <Field id="pelodlact" label="Lactate" type="numeric" />
-    <Field id="bicarb" label="Bicarbonate" type="numeric" />
+    <Field id="pelodwbc" label="White blood cell count" type="numeric" range={[0.5, 21.9]} units={'10^3 cells/µL'}/>
+    <Field id="pelodplate" label="Platelet count" type="numeric" range={[17, 347.85]} units={'10^3 cells/µL'}/>
+    <Field id="pelodpt" label="Prothrombin time" type="numeric" range={[12.9, 23.5]} units={'sec'}/>
+    <Field id="pelodhr" label="Heart rate" type="numeric" range={[94, 195]} units={'bpm'}/>
+    <Field id="pelodlact" label="Lactate" type="numeric" range={[0.89, 7]} units={'mmol/L'}/>
 </div>
 
 <div id="prism" class="category">
     <h3>PRISM values</h3>
-    <Field id="prismpao2lo" label="PAO2" type="numeric" />
-    <Field id="prismbunhi" label="Blood urea nitrogen" type="numeric"/>
-    <Field id="prismph" label="Blood pH" type="numeric" range={[6.8, 7.5]} units={'pH'}/>
-    <Field id="prismtemphi" label="Temperature" type="numeric" range={[20, 35]} units={'degrees Celsius'}/>
-    <Field id="prismgluc" label="Blood glucose" type="numeric" range={[80, 210]} units={'mg/dL'}/>
+    <Field id="prismbunhi" label="Blood urea nitrogen" type="numeric" range={[4, 52]} units={'mg/dL'}/>
+    <Field id="prismph" label="Blood pH" type="numeric" range={[7.05, 7.47]} units={'pH'}/>
+    <Field id="prismtemphi" label="Highest temperature" type="numeric" range={[36.6, 40.0]} units={'°C'}/>
 </div>
 
 <div id="prism" class="category">
     <h3>Demographics</h3>
-    <Field id="wt" label="Weight" type="numeric" units={'kg'}/>
+    <Field id="wt" label="Weight" type="numeric" units={'lbs'} range={[5.8, 63.0]}/>
+    <Field id="sex" label="Male?" type="binary" />
     <Field id="intub" label="Intubated?" type="binary" />
     <Field id="prisminpt" label="Admitted from inpatient unit?" type="binary" />
-    <Field id="prismprevadm" label="Previous ICU admission?" type="binary" />
+    <Field id="prismnonop" label="Nonoperative?" type="binary" />
     <Field id="prismcancer" label="Cancer?" type="binary" />
 </div>
 
 <div class="category">
     <Submit />
 </div>
+
+{#if $lastPrediction !== null}
+    <div class="category">
+        <Result result={$lastPrediction}/>
+    </div>
+{/if}
+
 
 <style lang='scss'>
     .category {

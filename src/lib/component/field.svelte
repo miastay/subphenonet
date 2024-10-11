@@ -22,12 +22,17 @@
     function test(val) {
         clearWarnings()
         value = val;
-        if(type !== "numeric") return true;
+        console.log(Number.parseFloat(value))
+        if(type !== "numeric") return;
+        if(type === "numeric" && Number.isNaN(Number.parseFloat(value))) {
+            warning = `not a number`;
+            return;
+        }
         if(range && range.length == 2) {
             if(value < range[0]) {
-                warning = `lower than expected (min == ${range[0]})`
+                warning = `significantly low (5% == ${range[0]})`
             } else if (value > range[1]) {
-                warning = `higher than expected (max == ${range[1]})`
+                warning = `significantly high (95% == ${range[1]})`
             }
         }
     }
@@ -41,20 +46,20 @@
 
 <div class="field">
     {#if warning !== null}
-        <div class="message">
-            <div id={id + "_warn"} class="indicator warn">
+        <div class="message" disabled aria-disabled="true" tabindex={5000}>
+            <div id={id + "_warn"} class="indicator warn" disabled aria-disabled="true" tabindex={5000}>
                 ?
             </div>
             <!-- <Badge id={id + "_warn"} color="yellow">!</Badge> -->
-            <Popover color="yellow" triggeredBy={"#" + id + "_warn"}>{`Double-check: value ${value} is ${warning}`}</Popover>
+            <Popover color="yellow" triggeredBy={"#" + id + "_warn"} disabled aria-disabled="true" tabindex={5000}>{`Double-check: value ${value} is ${warning}`}</Popover>
         </div>
     {/if}
     {#if $errored[id] == true} 
-        <div class="message">
-            <div id={id + "_err"} class="indicator error">
+        <div class="message" disabled aria-disabled="true" tabindex={5000}>
+            <div id={id + "_err"} class="indicator error" disabled aria-disabled="true" tabindex={5000}>
                 !
             </div>
-            <Popover color="red" triggeredBy={"#" + id + "_err"}>{`Cannot be blank`}</Popover>
+            <Popover color="red" triggeredBy={"#" + id + "_err"} disabled aria-disabled="true" tabindex={5000}>{`Cannot be blank`}</Popover>
         </div>
     {/if}
     {#if type === "binary"}

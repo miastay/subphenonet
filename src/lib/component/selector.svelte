@@ -13,7 +13,7 @@
         <button class="top">{`Using ${$modelType} model`}<ChevronDownOutline class="w-6 h-6 ms-2 text-black dark:text-black" /></button>
         <Dropdown bind:open={dropdownOpen}>
             <DropdownItem on:click={() => {dropdownOpen = false; $modelType = "full"}}>
-                {`Full (16 variables)`}
+                {`Full (15 variables)`}
             </DropdownItem>
             <DropdownItem on:click={() => {dropdownOpen = false; $modelType = "small"}}>
                 {`Small (6 variables)`}

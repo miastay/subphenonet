@@ -4,11 +4,7 @@
 </script>
 
 <div id="all" class="category">
-    <Field id="pelodpt" label="Prothrombin time" type="numeric" />
-    <Field id="pelodlact" label="Lactate" type="numeric" />
-    <Field id="prismbunhi" label="Blood urea nitrogen" type="numeric"/>
-    <Field id="prismph" label="Blood pH" type="numeric" range={[6.8, 7.5]} units={'pH'}/>
-    <Field id="prismcancer" label="Cancer?" type="binary" />
+    <span>Not yet implemented</span>
 </div>
 
 <div class="category">
