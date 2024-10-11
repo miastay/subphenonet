@@ -1,8 +1,9 @@
 <script>
     import { onMount } from 'svelte';
-    import { spnForm, errored } from '../../store.js';
+    import { spnForm, errored, inputType, columns } from '../../store.js';
     import { Badge, Indicator, Popover } from 'flowbite-svelte';
-    import { EyeOutline, EyeSlashOutline } from 'flowbite-svelte-icons';
+    import { EyeOutline, EyeSlashOutline, ChevronDownOutline } from 'flowbite-svelte-icons';
+    import Dropsearch from './dropsearch.svelte';
 
     export let id;
     export let label;
@@ -42,6 +43,8 @@
         $errored[id] = false;
     }
 
+    let dropdownOpen = false;
+
 </script>
 
 <div class="field">
@@ -62,32 +65,40 @@
             <Popover color="red" triggeredBy={"#" + id + "_err"} disabled aria-disabled="true" tabindex={5000}>{`Cannot be blank`}</Popover>
         </div>
     {/if}
-    {#if type === "binary"}
-        <label for={id}>{label ?? "<VAR>"}</label>
-        <input type="radio" id={id + '_true'} value={1} bind:group={$spnForm[id]} on:change={(e) => test(e.target.value)}>
-        <label for={id + '_true'}>TRUE</label>
-        <input type="radio" id={id + '_false'} value={0} bind:group={$spnForm[id]} on:change={(e) => test(e.target.value)}>
-        <label for={id + '_false'}>FALSE</label>
-    {:else if type === "numeric"}
-        <label for={id}>{label ?? "<VAR>"}</label>
-        <input type="number" id={id} bind:value={$spnForm[id]} on:change={(e) => test(e.target.value)} placeholder={units} class={(($errored[id] == true) ? 'errored' : '') + ((warning !== null) ? 'warned' : '')}>
-    {:else if type === "text"}
-        <label for={id}>{label ?? "<VAR>"}</label>
-        <input type="text" id={id} bind:value={$spnForm[id]} on:change={(e) => test(e.target.value)} class={(($errored[id] == true) ? 'errored' : '') + ((warning !== null) ? 'warned' : '')}>
-    {:else if type === "token"}
-        <label for={id}>{label ?? "<VAR>"}</label>
-        <input type="password" id={id} bind:value={$spnForm[id]} on:change={(e) => test(e.target.value)} class={(($errored[id] == true) ? 'errored' : '') + ((warning !== null) ? 'warned' : '')}>
-        <button class="ml-2" on:click={() => {let elem = document.querySelector(`#${id}`); eye = (elem.type === "password"); eye ? elem.type = "text" : elem.type = "password"}}>
-            {#if eye}
-                <EyeSlashOutline class="w-6 h-6 text-black"/>
-            {:else}
-                <EyeOutline class="w-6 h-6 text-black"/>
-            {/if}
-        </button>
-    {:else if type === "user"}
-        <label for={id}>{label ?? "<VAR>"}</label>
-        <input type="username" id={id} bind:value={$spnForm[id]} on:change={(e) => test(e.target.value)} class={(($errored[id] == true) ? 'errored' : '') + ((warning !== null) ? 'warned' : '')}>
+
+    {#if $inputType === "single"}
+        {#if type === "binary"}
+            <label for={id}>{label ?? "<VAR>"}</label>
+            <input type="radio" id={id + '_true'} value={1} bind:group={$spnForm[id]} on:change={(e) => test(e.target.value)}>
+            <label for={id + '_true'} class={'ml-1'}>TRUE</label>
+            <input type="radio" id={id + '_false'} class={'ml-2'} value={0} bind:group={$spnForm[id]} on:change={(e) => test(e.target.value)}>
+            <label for={id + '_false'} class={'ml-1'}>FALSE</label>
+        {:else if type === "numeric"}
+            <label for={id}>{label ?? "<VAR>"}</label>
+            <input type="number" id={id} bind:value={$spnForm[id]} on:change={(e) => test(e.target.value)} placeholder={units} class={(($errored[id] == true) ? 'errored' : '') + ((warning !== null) ? 'warned' : '')}>
+        {:else if type === "text"}
+            <label for={id}>{label ?? "<VAR>"}</label>
+            <input type="text" id={id} bind:value={$spnForm[id]} on:change={(e) => test(e.target.value)} class={(($errored[id] == true) ? 'errored' : '') + ((warning !== null) ? 'warned' : '')}>
+        {/if}
+    {:else}
+        {#if type === "token"}
+            <label for={id}>{label ?? "<VAR>"}</label>
+            <input type="password" id={id} bind:value={$spnForm[id]} on:change={(e) => test(e.target.value)} class={(($errored[id] == true) ? 'errored' : '') + ((warning !== null) ? 'warned' : '')}>
+            <button class="ml-2" on:click={() => {let elem = document.querySelector(`#${id}`); eye = (elem.type === "password"); eye ? elem.type = "text" : elem.type = "password"}}>
+                {#if eye}
+                    <EyeSlashOutline class="w-6 h-6 text-black"/>
+                {:else}
+                    <EyeOutline class="w-6 h-6 text-black"/>
+                {/if}
+            </button>
+        {:else if type === "user"}
+            <label for={id}>{label ?? "<VAR>"}</label>
+            <input type="username" id={id} bind:value={$spnForm[id]} on:change={(e) => test(e.target.value)} class={(($errored[id] == true) ? 'errored' : '') + ((warning !== null) ? 'warned' : '')}>
+        {:else}
+            <Dropsearch id={id} label={label} />
+        {/if}
     {/if}
+    
 </div>
 
 <style lang="scss">

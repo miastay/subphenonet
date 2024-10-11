@@ -1,6 +1,8 @@
 <script>
     import { Dropzone } from 'flowbite-svelte';
     import { CloseCircleOutline } from 'flowbite-svelte-icons';
+    import * as d3 from 'd3';
+    import { columns, inputType, upload } from '../../store';
 
     export let value = [];
     export let accepts = "";
@@ -22,18 +24,44 @@
         });
       }
     };
+
+    async function updateAssociationFile(file) {
+        if(!file || file?.length == 0) return;
+        let f = file[0];
+        console.log(`${f.size} bytes`)
+        const reader = new FileReader()
+        reader.onload = handleFileLoad;
+        reader.readAsText(f)
+    }
+
+    async function handleFileLoad(event) {
+        console.log(event)
+        let txt = event.target.result;
+        if(txt) {
+            console.log(txt)
+            $upload = d3.tsvParse(txt)
+            $columns = [];
+            // get columns
+            Object.keys($upload[0]).forEach((x) => $columns.push(x))
+            console.log($columns)
+            $inputType = "batch";
+        }
+    }
   
     const handleChange = (event) => {
       const files = event.target.files;
       if (files.length > 0) {
         value.push(files[0]);
         value = value;
+        updateAssociationFile(value)
       }
     };
-  
-    const showFiles = (files) => {
-        return files[0];
-    };
+
+    function clearUpload() {
+        value = [];
+        $inputType = "single";
+    }
+
   </script>
 
 <div class="dropzone-container">
@@ -53,7 +81,7 @@
         {/if}
     </Dropzone>
     {#if value.length !== 0}
-        <button class="clear" on:click={() => value = []}>
+        <button class="clear" on:click={() => clearUpload()}>
             <CloseCircleOutline class="w-5 h-5" />
         </button>
     {/if}
