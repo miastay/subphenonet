@@ -66,7 +66,7 @@
         </div>
     {/if}
 
-    {#if $inputType === "single"}
+    {#if $inputType === "single" || (type === "token" || type === "user")}
         {#if type === "binary"}
             <label for={id}>{label ?? "<VAR>"}</label>
             <input type="radio" id={id + '_true'} value={1} bind:group={$spnForm[id]} on:change={(e) => test(e.target.value)}>
@@ -79,9 +79,7 @@
         {:else if type === "text"}
             <label for={id}>{label ?? "<VAR>"}</label>
             <input type="text" id={id} bind:value={$spnForm[id]} on:change={(e) => test(e.target.value)} class={(($errored[id] == true) ? 'errored' : '') + ((warning !== null) ? 'warned' : '')}>
-        {/if}
-    {:else}
-        {#if type === "token"}
+        {:else if type === "token"}
             <label for={id}>{label ?? "<VAR>"}</label>
             <input type="password" id={id} bind:value={$spnForm[id]} on:change={(e) => test(e.target.value)} class={(($errored[id] == true) ? 'errored' : '') + ((warning !== null) ? 'warned' : '')}>
             <button class="ml-2" on:click={() => {let elem = document.querySelector(`#${id}`); eye = (elem.type === "password"); eye ? elem.type = "text" : elem.type = "password"}}>
@@ -91,12 +89,12 @@
                     <EyeOutline class="w-6 h-6 text-black"/>
                 {/if}
             </button>
-        {:else if type === "user"}
+        {:else}
             <label for={id}>{label ?? "<VAR>"}</label>
             <input type="username" id={id} bind:value={$spnForm[id]} on:change={(e) => test(e.target.value)} class={(($errored[id] == true) ? 'errored' : '') + ((warning !== null) ? 'warned' : '')}>
-        {:else}
-            <Dropsearch id={id} label={label} />
         {/if}
+    {:else}
+        <Dropsearch id={id} label={label} />
     {/if}
     
 </div>
